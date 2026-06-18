@@ -1,0 +1,15 @@
+model\Librarian.class
+model\LibraryLoader.class
+ui\AddBookScene.class
+model\Magazine.class
+model\Member.class
+model\BorrowTransaction.class
+model\Main.class
+ui\LoginScene.class
+model\DVD.class
+model\LibraryItem.class
+ui\LibraryApp.class
+model\AudioBook.class
+ui\DashboardScene.class
+model\Book.class
+model\User.class

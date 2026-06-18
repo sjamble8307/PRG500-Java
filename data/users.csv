@@ -1,0 +1,6 @@
+﻿userId,role,name,contactInfo,extra
+U001,Member,Alice,alice@mail.com,3
+U002,Member,Bob,bob@mail.com,1
+U003,Member,Charlie,charlie@mail.com,5
+L001,Librarian, Shantanu ,shantanu@library.org,EMP-42
+
