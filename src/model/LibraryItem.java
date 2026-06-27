@@ -29,12 +29,34 @@ public abstract class LibraryItem {
         return new Book(itemId, title, author, genre, pageCount);
     }
 
+    public static LibraryItem createMagazine(String itemId, String title, String publisher,
+                                             String issueDate, int issueNumber) {
+        return new Magazine(itemId, title, publisher, issueDate, issueNumber);
+    }
+
+    public static LibraryItem createDVD(String itemId, String title, String director,
+                                        int durationMinutes, String rating) {
+        return new DVD(itemId, title, director, durationMinutes, rating);
+    }
+
+    public static LibraryItem createAudioBook(String itemId, String title, String author,
+                                              String genre, int pageCount,
+                                              String narrator, double durationHours) {
+        return new AudioBook(itemId, title, author, genre, pageCount, narrator, durationHours);
+    }
+
     public String getItemId()       { return itemId; }
     public String getTitle()        { return title; }
     public String getAuthor()       { return author; }
     public boolean isCheckedOut()   { return checkedOut; }
 
     public void setCheckedOut(boolean checkedOut) { this.checkedOut = checkedOut; }
+
+    /**
+     * Serialises this item back to a CSV row matching the items.csv schema:
+     * itemId, type, title, author, field1, field2, field3, field4, checkedOut
+     */
+    public abstract String[] toCsvRow();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -59,6 +81,15 @@ class Book extends LibraryItem {
 
     public String getGenre()    { return genre; }
     public int getPageCount()   { return pageCount; }
+
+    @Override
+    public String[] toCsvRow() {
+        return new String[]{
+            getItemId(), "Book", getTitle(), getAuthor(),
+            genre, String.valueOf(pageCount), "", "",
+            String.valueOf(isCheckedOut())
+        };
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -82,6 +113,15 @@ class Magazine extends LibraryItem {
 
     public String getIssueDate()    { return issueDate; }
     public int getIssueNumber()     { return issueNumber; }
+
+    @Override
+    public String[] toCsvRow() {
+        return new String[]{
+            getItemId(), "Magazine", getTitle(), getAuthor(),
+            issueDate, String.valueOf(issueNumber), "", "",
+            String.valueOf(isCheckedOut())
+        };
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -105,6 +145,15 @@ class DVD extends LibraryItem {
 
     public int getDurationMinutes() { return durationMinutes; }
     public String getRating()       { return rating; }
+
+    @Override
+    public String[] toCsvRow() {
+        return new String[]{
+            getItemId(), "DVD", getTitle(), getAuthor(),
+            String.valueOf(durationMinutes), rating, "", "",
+            String.valueOf(isCheckedOut())
+        };
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,4 +179,14 @@ class AudioBook extends Book {
 
     public String getNarrator()      { return narrator; }
     public double getDurationHours() { return durationHours; }
+
+    @Override
+    public String[] toCsvRow() {
+        return new String[]{
+            getItemId(), "AudioBook", getTitle(), getAuthor(),
+            getGenre(), String.valueOf(getPageCount()),
+            narrator, String.valueOf(durationHours),
+            String.valueOf(isCheckedOut())
+        };
+    }
 }

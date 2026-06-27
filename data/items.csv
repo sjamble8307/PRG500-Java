@@ -1,13 +1,15 @@
-﻿itemId,type,title,author,field1,field2,field3,field4
-B001,Book,Dune,Frank Herbert,Sci-Fi,412,,
-B002,Book,Foundation,Isaac Asimov,Sci-Fi,255,,
-B003,Book,Neuromancer,William Gibson,Sci-Fi,271,,
-B004,Book,Pride and Prejudice,Jane Austen,Classic,432,,
-B005,Book,1984,George Orwell,Dystopia,328,,
-M001,Magazine,National Geographic,Nat Geo Society,2026-05,312,,
-M002,Magazine,Scientific American,Springer Nature,2026-04,280,,
-D001,DVD,Interstellar,Christopher Nolan,169,PG-13,,
-D002,DVD,The Matrix,Lana Wachowski,136,R,,
-A001,AudioBook,The Martian,Andy Weir,Sci-Fi,369,Wil Wheaton,10.5
-A002,AudioBook,Ender's Game,Orson Scott Card,Sci-Fi,352,Stefan Rudnicki,11.2
-
+"itemId","type","title","author","field1","field2","field3","field4","checkedOut"
+"B001","Book","Dune","Frank Herbert","Sci-Fi","412","","","false"
+"B002","Book","Foundation","Isaac Asimov","Sci-Fi","255","","","false"
+"B003","Book","Neuromancer","William Gibson","Sci-Fi","271","","","false"
+"B004","Book","Pride and Prejudice","Jane Austen","Classic","432","","","false"
+"B005","Book","1984","George Orwell","Dystopia","328","","","false"
+"M001","Magazine","National Geographic","Nat Geo Society","2026-05","312","","","false"
+"M002","Magazine","Scientific American","Springer Nature","2026-04","280","","","false"
+"D001","DVD","Interstellar","Christopher Nolan","169","PG-13","","","false"
+"D002","DVD","The Matrix","Lana Wachowski","136","R","","","false"
+"A001","AudioBook","The Martian","Andy Weir","Sci-Fi","369","Wil Wheaton","10.5","false"
+"A002","AudioBook","Ender's Game","Orson Scott Card","Sci-Fi","352","Stefan Rudnicki","11.2","true"
+"B044","Book","Hail Mary","Andy Weir","Sci FI","350","","","false"
+"M013","DVD","Jurassic Park","Steven Spielberg","120","PG-13","","","true"
+"M008","DVD","Obsession","Curry Barker","90","R","","","false"

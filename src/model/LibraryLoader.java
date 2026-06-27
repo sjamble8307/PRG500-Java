@@ -1,9 +1,11 @@
 package model;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,14 +26,14 @@ public class LibraryLoader {
                 .collect(Collectors.toList());
     }
 
-    // CSV columns: itemId, type, title, author, field1, field2, field3, field4
+    // CSV columns: itemId, type, title, author, field1, field2, field3, field4[, checkedOut]
     private static LibraryItem parseItemRow(String[] c) {
         String id     = c[0].trim();
         String type   = c[1].trim();
         String title  = c[2].trim();
         String author = c[3].trim();
 
-        return switch (type) {
+        LibraryItem item = switch (type) {
             case "Book" -> new Book(id, title, author, c[4].trim(), Integer.parseInt(c[5].trim()));
             case "Magazine" -> new Magazine(id, title, author, c[4].trim(), Integer.parseInt(c[5].trim()));
             case "DVD" -> new DVD(id, title, author, Integer.parseInt(c[4].trim()), c[5].trim());
@@ -43,6 +45,12 @@ public class LibraryLoader {
                 yield null;
             }
         };
+
+        // Restore checked-out status if the optional 9th column is present.
+        if (item != null && c.length > 8 && "true".equalsIgnoreCase(c[8].trim())) {
+            item.setCheckedOut(true);
+        }
+        return item;
     }
 
     // Reads users.csv with OpenCSV, then uses a Stream pipeline to map each row to a User subclass.
@@ -94,5 +102,23 @@ public class LibraryLoader {
             }
         }
         return rows;
+    }
+
+    /**
+     * Writes the full catalogue back to the CSV file, preserving the original
+     * column layout and appending the optional {@code checkedOut} column.
+     *
+     * Called by the UI layer whenever the catalogue changes (add book, toggle availability).
+     */
+    public static void saveItems(String path, List<LibraryItem> items) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path));
+             CSVWriter csv = new CSVWriter(writer)) {
+            // Write header – includes the optional checkedOut column
+            csv.writeNext(new String[]{"itemId","type","title","author",
+                    "field1","field2","field3","field4","checkedOut"});
+            for (LibraryItem item : items) {
+                csv.writeNext(item.toCsvRow());
+            }
+        }
     }
 }

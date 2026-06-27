@@ -45,7 +45,7 @@ PRG500/
     ├── LibraryApp.java         JavaFX entry point: kinda like managers, switches scenes
     ├── LoginScene.java         Scene 1 — login form
     ├── DashboardScene.java     Scene 2 — catalogue table + librarian actions
-    ├── AddBookScene.java       Scene 3 — add-a-book form
+    ├── AddItemScene.java       Scene 3 — add-an-item form (Book/Magazine/DVD/AudioBook)
     │
     ├── LibraryItem.java        Domain: LibraryItem + Book/Magazine/DVD/AudioBook
     ├── User.java               Domain: User + Member/Librarian

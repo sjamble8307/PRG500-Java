@@ -76,10 +76,11 @@ public class DashboardScene {
             table.refresh();
             status.setText("'" + item.getTitle() + "' is now "
                     + (item.isCheckedOut() ? "checked out." : "available."));
+            app.saveCatalogue();   // persist the change to items.csv
         });
 
-        Button addBtn = new Button("Add book");
-        addBtn.setOnAction(e -> app.showAddBook());
+        Button addBtn = new Button("Add item");
+        addBtn.setOnAction(e -> app.showAddItem());
 
         HBox actions = new HBox(10, toggleBtn, addBtn);
         status.setWrapText(true);
@@ -111,7 +112,7 @@ public class DashboardScene {
         Label coverHeading = new Label("Cover Art");
         coverHeading.setFont(Font.font(14));
 
-        Label poweredBy = new Label("via Open Library API\n+ Gson (Maven dep)");
+        Label poweredBy = new Label("Books: Open Library\nDVDs: TMDb");
         poweredBy.setStyle("-fx-text-fill: #aaa; -fx-font-size: 10;");
         poweredBy.setTextAlignment(TextAlignment.CENTER);
 
@@ -122,7 +123,9 @@ public class DashboardScene {
         // When the user selects a row, kick off an async cover fetch
         table.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldItem, newItem) -> {
-                    if (newItem != null) loadCoverAsync(newItem.getTitle());
+                    if (newItem != null) loadCoverAsync(
+                            newItem.getTitle(),
+                            newItem.getClass().getSimpleName());
                 });
 
         HBox root = new HBox(14, leftPane, rightPane);
@@ -133,18 +136,19 @@ public class DashboardScene {
     /**
      * Spawns a thread that calls {@link CoverFetcher} (Gson-powered),
      * then delivers the result back to the JavaFX Application Thread.
+     * DVDs are routed to TMDb; all other types use Open Library.
      */
-    private void loadCoverAsync(String title) {
+    private void loadCoverAsync(String title, String itemType) {
         currentCoverTitle = title;
         coverView.setImage(null);
         coverLabel.setVisible(false);
         spinner.setVisible(true);
 
         Thread worker = new Thread(() -> {
-            byte[] bytes = CoverFetcher.fetchCoverBytes(title);
+            byte[] bytes = CoverFetcher.fetchCoverBytes(title, itemType);
 
             Platform.runLater(() -> {
-                if (!title.equals(currentCoverTitle)) return; // return cached result
+                if (!title.equals(currentCoverTitle)) return; // discard stale result
                 spinner.setVisible(false);
                 if (bytes != null) {
                     coverView.setImage(new Image(new ByteArrayInputStream(bytes)));

@@ -30,12 +30,16 @@ public class LibraryApp extends Application {
     private ObservableList<LibraryItem> catalogue;
     private User librarian;
 
+    /** Path to the items CSV – kept so we can write back to the same file. */
+    private String itemsPath;
+
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
 
         // Reuse the existing loader and CSV files.
-        var items = LibraryLoader.loadItems("data/items.csv");
+        itemsPath = "data/items.csv";
+        var items = LibraryLoader.loadItems(itemsPath);
         var users = LibraryLoader.loadUsers("data/users.csv", items);
         catalogue = FXCollections.observableArrayList(items);
 
@@ -54,7 +58,7 @@ public class LibraryApp extends Application {
 
     public void showLogin()     { switchTo(new LoginScene(this).build()); }
     public void showDashboard() { switchTo(new DashboardScene(this).build()); }
-    public void showAddBook()   { switchTo(new AddBookScene(this).build()); }
+    public void showAddItem()   { switchTo(new AddItemScene(this).build()); }
 
     private void switchTo(Parent root) {
         Scene current = primaryStage.getScene();
@@ -69,6 +73,18 @@ public class LibraryApp extends Application {
 
     public ObservableList<LibraryItem> getCatalogue() { return catalogue; }
     public User getLibrarian()                         { return librarian; }
+
+    /**
+     * Persists the current catalogue back to items.csv.
+     * Called by any scene that mutates the catalogue.
+     */
+    public void saveCatalogue() {
+        try {
+            LibraryLoader.saveItems(itemsPath, catalogue);
+        } catch (Exception e) {
+            System.err.println("Failed to save catalogue: " + e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
